@@ -11,7 +11,7 @@ let bot;
 
 if (process.env.NODE_ENV === 'production') {
     bot = new Bot(token);
-    bot.setWebHook(process.env.BOT_WEBHOOK + "/" + bot.token);
+    bot.setWebHook(process.env.BOT_WEBHOOK + "/" + bot.token).then((res) => console.log(res));
 }
 else {
     bot = new Bot(token, { polling: true });
@@ -20,7 +20,7 @@ else {
 console.log('Bot server started in the ' + process.env.NODE_ENV + ' mode');
 
 // Matches "/echo [whatever]"
-bot.onText(/\/echo (.+)/, (msg, match) => { 
+bot.onText(/\/echo (.+)/, (msg, match) => {
     // 'msg' is the received Message from Telegram
     // 'match' is the result of executing the regexp above on the text content
     // of the message
@@ -47,7 +47,7 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
         reply_markup: {
             //"keyboard": [["Sample text", "Second sample"], ["Keyboard"], ["I'm robot"]]
             inline_keyboard: [
-                [{ text: "Add to queue", callback_data: "addToQueue" }], 
+                [{ text: "Add to queue", callback_data: "addToQueue" }],
                 [{ text: "Show queue", callback_data: "showQueue" }],
                 [{ text: "End current shower", callback_data: "endCurrentShower" }],
                 [{ text: "Take a break", callback_data: "break" }]
@@ -65,7 +65,7 @@ bot.on('callback_query', (msg) => {
 // logger
 bot.on('message', (msg) => {
     console.log(msg);
-  });
+});
 
 bot.on('sticker', (msg) => {
     bot.sendSticker(msg.chat.id, "CAADAQADrwAD82LeB9V0bTtHBQwSAg");
