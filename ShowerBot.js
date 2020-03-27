@@ -11,7 +11,7 @@ let bot;
 
 if (process.env.NODE_ENV === 'production') {
     bot = new Bot(token);
-    bot.setWebHook(process.env.HEROKU_URL + bot.token);
+    bot.setWebHook(process.env.BOT_WEBHOOK + bot.token);
 }
 else {
     bot = new Bot(token, { polling: true });
