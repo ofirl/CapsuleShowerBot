@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const packageInfo = require('./package.json');
+var path = require('path');
 
 const app = express();
 app.use('/static', express.static(path.join(__dirname, 'public')));
