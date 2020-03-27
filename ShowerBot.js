@@ -11,7 +11,9 @@ let bot;
 
 if (process.env.NODE_ENV === 'production') {
     bot = new Bot(token);
-    bot.setWebHook(process.env.BOT_WEBHOOK + "/" + bot.token).then((res) => console.log(res));
+    bot.setWebHook(process.env.BOT_WEBHOOK + "/" + bot.token, {
+        certificate: 'https://capsule-shower-bot.ofirl.com/static/cert.pem',
+    }).then((res) => console.log(res));
 }
 else {
     bot = new Bot(token, { polling: true });
