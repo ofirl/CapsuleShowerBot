@@ -40,7 +40,7 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
     const chatId = msg.chat.id;
     //const resp = match[1]; // the captured "whatever"
 
-    let resp = "Hello,\nI'm ShowerBot,\nHow can i help?";
+    let resp = `Hello ${msg.from.username},\nI'm ShowerBot,\nHow can i help?`;
 
     // send back the matched "whatever" to the chat
     bot.sendMessage(msg.chat.id, resp, {
