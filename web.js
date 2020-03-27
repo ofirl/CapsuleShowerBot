@@ -9,7 +9,7 @@ app.get('/', function (req, res) {
   res.json({ version: packageInfo.version });
 });
 
-var server = app.listen(process.env.PORT, "https://capsule-shower-bot.ofirl.com", () => {
+var server = app.listen(process.env.PORT, "206.189.122.197", () => {
   const host = server.address().address;
   const port = server.address().port;
   console.log('Web server started at http://%s:%s', host, port);
