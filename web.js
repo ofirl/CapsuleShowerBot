@@ -9,7 +9,7 @@ app.get('/', function (req, res) {
   res.json({ version: packageInfo.version });
 });
 
-var server = app.listen(process.env.PORT, // "0.0.0.0", 
+var server = app.listen(process.env.PORT, "0.0.0.0", 
 () => {
   const host = server.address().address;
   const port = server.address().port;
