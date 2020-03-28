@@ -56,7 +56,7 @@ function startBreak(bot, msg) {
 }
 
 function resetQueues(bot, msg) {
-    queueUtils.resetQueues();
+    queueUtils.resetQueues(bot, msg);
     bot.editMessageText(`Queues cleared`,
         {
             chat_id: msg.message.chat.id,

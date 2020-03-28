@@ -46,7 +46,7 @@ function sendToAllQueue(bot, msg, text) {
     });
 }
 
-function resetQueues() {
+function resetQueues(bot, msg) {
     queue = [];
     doneQueue = [];
 };
