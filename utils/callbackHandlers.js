@@ -14,12 +14,13 @@ function addToQueue(bot, msg) {
         return;
     }
 
-    queueUtils.addToQueue(msg.from);
-    bot.sendMessage(msg.from.id, "You have been added to the queue :)");
+    let numberInQueue = queueUtils.addToQueue(msg.from);
+    bot.sendMessage(msg.from.id, `You have been added to the queue,\nYou are number ${numberInQueue}`);
 }
 
 function removeFromQueue(bot, msg) {
     queueUtils.removeFromQueue(msg.from.id);
+    bot.sendMessage(msg.from.id, "You have been removed from the queue");
 }
 
 const callbackHandlersMap = {

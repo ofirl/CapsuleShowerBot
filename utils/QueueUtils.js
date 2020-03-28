@@ -8,6 +8,7 @@ function parseQueue() {
 
 function addToQueue(queueObj) {
     queue.push(queueObj);
+    return queue.length;
 }
 
 function removeFromQueue(id) {
