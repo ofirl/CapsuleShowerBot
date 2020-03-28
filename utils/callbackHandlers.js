@@ -69,11 +69,17 @@ function callNextInLine(bot, msg) {
             message_id: msg.message.message_id
         }
     );
-    
+
     if (queueUtils.queue.length < 2)
         return;
 
     bot.sendMessage(queueUtils.queue[1].id, `You are next in line, get ready`);
+    bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: "End shower", callback_data: "endCurrentShower" }],
+            ]
+        });
 }
 
 function takeWaterBreak(bot, msg) {
