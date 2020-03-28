@@ -7,6 +7,9 @@ console.log(globals);
 
 function showQueue(bot, msg) {
     bot.sendMessage(msg.from.id, "Showered:\n" + queueUtils.parseQueue());
+    bot.answerCallbackQuery(msg.id);
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function addToQueue(bot, msg) {
@@ -38,6 +41,8 @@ function addToQueue(bot, msg) {
 
     if (queueUtils.queue.length === 1)
         bot.sendMessage(consts.adminGroupChatId, `There are people waiting to take a shower`);
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function removeFromQueue(bot, msg) {
@@ -48,6 +53,8 @@ function removeFromQueue(bot, msg) {
             message_id: msg.message.message_id
         }
     );
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function endCurrentShower(bot, msg) {
@@ -70,6 +77,8 @@ function endCurrentShower(bot, msg) {
         stateUtils.startBreak(bot, msg);
         bot.sendMessage(consts.adminGroupChatId, "The queue is now empty,\nTaking a break");
     }
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function callNextInLine(bot, msg) {
@@ -95,6 +104,8 @@ function callNextInLine(bot, msg) {
         return;
 
     bot.sendMessage(queueUtils.queue[1], `${queueUtils.queue[0].first_name || ""} ${queueUtils.queue[0].last_name || ""} ${queueUtils.queue[0].username ? `(@${queueUtils.queue[0].username})` : ""} is now going to the shower,\nYou can get ready, you are next `);
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function takeWaterBreak(bot, msg) {
@@ -107,6 +118,8 @@ function takeWaterBreak(bot, msg) {
 
     stateUtils.startBreak(bot, msg);
     bot.sendMessage(consts.adminGroupChatId, `There are no hot water, taking a break`);
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 const callbackHandlersMap = {

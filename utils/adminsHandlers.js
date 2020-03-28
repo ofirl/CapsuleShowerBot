@@ -27,10 +27,14 @@ function adminStart(bot, msg) {
 
 function showQueue(bot, msg) {
     bot.sendMessage(msg.message.chat.id, "Waiting:\n" + queueUtils.parseQueue());
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function showDoneQueue(bot, msg) {
     bot.sendMessage(msg.message.chat.id, "Showered:\n" + queueUtils.parseDoneQueue());
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function endBreak(bot, msg) {
@@ -50,10 +54,12 @@ function endBreak(bot, msg) {
             }
         );
     }
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function startBreak(bot, msg) {
-    stateManager.startBreak(bot, msg, false);
+    stateManager.startBreak(bot, msg);
 
     bot.editMessageText(`Break started`,
         {
@@ -61,6 +67,8 @@ function startBreak(bot, msg) {
             message_id: msg.message.message_id
         }
     );
+
+    bot.answerCallbackQuery(msg.id);
 }
 
 function resetQueues(bot, msg) {
@@ -71,6 +79,8 @@ function resetQueues(bot, msg) {
             message_id: msg.message.message_id
         }
     );
+
+    bot.answerCallbackQuery(msg.id);
 };
 
 const adminsHandlersMap = {
