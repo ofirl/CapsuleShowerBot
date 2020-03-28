@@ -92,7 +92,8 @@ bot.on('message', (msg) => {
 });
 
 bot.on('sticker', (msg) => {
-    bot.sendSticker(msg.chat.id, "CAADAQADrwAD82LeB9V0bTtHBQwSAg");
+    // bot.sendSticker(msg.chat.id, "CAADAQADrwAD82LeB9V0bTtHBQwSAg");
+    bot.sendSticker(msg.chat.id, "CAACAgIAAxkBAAIC415_Q6ABYGrpRapRTU2MzeBkJCDtAAJZAANEDc8X-HZZ1vlXfjgYBA");
 });
 
 module.exports = bot;

@@ -88,6 +88,7 @@ function callNextInLine(bot, msg) {
             message_id: msg.message.message_id
         }
     );
+    bot.sendSticker(msg.message.chat.id, "CAACAgIAAxkBAAIC415_Q6ABYGrpRapRTU2MzeBkJCDtAAJZAANEDc8X-HZZ1vlXfjgYBA");
 
     if (queueUtils.queue.length < 1)
         return;
@@ -115,6 +116,7 @@ function takeWaterBreak(bot, msg) {
             message_id: msg.message.message_id
         }
     );
+    bot.sendSticker(msg.message.chat.id, "CAACAgIAAxkBAAIC415_Q6ABYGrpRapRTU2MzeBkJCDtAAJZAANEDc8X-HZZ1vlXfjgYBA");
 
     stateUtils.startBreak(bot, msg);
     bot.sendMessage(consts.adminGroupChatId, `There are no hot water, taking a break`);
