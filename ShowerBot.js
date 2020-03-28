@@ -5,6 +5,7 @@ let globals = require('./globals');
 let callbackHandlers = require('./utils/callbackHandlers');
 let adminsHandlers = require('./utils/adminsHandlers');
 let queueUtils = require('./utils/QueueUtils');
+let mathUtils = require('./utils/mathUtils');
 
 const token = process.env.TOKEN;
 
@@ -93,7 +94,7 @@ bot.on('message', (msg) => {
 
 bot.on('sticker', (msg) => {
     // bot.sendSticker(msg.chat.id, "CAADAQADrwAD82LeB9V0bTtHBQwSAg");
-    bot.sendSticker(msg.chat.id, "CAACAgIAAxkBAAIC415_Q6ABYGrpRapRTU2MzeBkJCDtAAJZAANEDc8X-HZZ1vlXfjgYBA");
+    bot.sendSticker(msg.chat.id, consts.showerDoneStickers[mathUtils.getRandomNumber(0, consts.showerDoneStickers.length - 1)]);
 });
 
 module.exports = bot;

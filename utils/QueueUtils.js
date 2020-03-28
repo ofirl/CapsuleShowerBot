@@ -3,12 +3,16 @@ let globals = require('../globals');
 let queue = globals.queue;
 let doneQueue = globals.doneQueue;
 
+function queueToString(selectedQueue) {
+    return selectedQueue.length === 0 ? "The queue is empty" : selectedQueue.map((q, idx) => `${idx + 1}. ${q.first_name || ""} ${q.last_name || ""}${q.username ? ` - @${q.username}` : ""}`).join('\n');
+}
+
 function parseQueue() {
-    return queue.length === 0 ? "The queue is empty" : queue.map((q, idx) => `${idx + 1}. ${q.first_name || ""} ${q.last_name || ""} - @${q.username}`).join('\n');
+    return queueToString(queue);
 }
 
 function parseDoneQueue() {
-    return doneQueue.length === 0 ? "The queue is empty" : doneQueue.map((q, idx) => `${idx + 1}. ${q.first_name || ""} ${q.last_name || ""} - @${q.username}`).join('\n');
+    return queueToString(doneQueue);
 }
 
 function addToQueue(queueObj) {
@@ -20,6 +24,8 @@ function removeFromQueue(id) {
     let index = queue.findIndex((q) => q.id === id);
     if (index === -1)
         return;
+
+    queue.splice(index, 1)
 }
 
 function findInQueue(id) {
