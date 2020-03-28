@@ -2,6 +2,7 @@ let globals = require('../globals');
 let queueUtils = require('./QueueUtils');
 let stateUtils = require('./stateManager');
 let consts = require('../consts');
+let mathUtils = require('./mathUtils');
 
 console.log(globals);
 
@@ -88,7 +89,7 @@ function callNextInLine(bot, msg) {
             message_id: msg.message.message_id
         }
     );
-    bot.sendSticker(msg.message.chat.id, "CAACAgIAAxkBAAIC415_Q6ABYGrpRapRTU2MzeBkJCDtAAJZAANEDc8X-HZZ1vlXfjgYBA");
+    bot.sendSticker(msg.message.chat.id, consts.showerDoneStickers[mathUtils.getRandomNumber(0, consts.showerDoneStickers.length - 1)]);
 
     if (queueUtils.queue.length < 1)
         return;
