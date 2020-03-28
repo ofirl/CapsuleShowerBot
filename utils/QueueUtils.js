@@ -3,7 +3,7 @@ let globals = require('../globals');
 let queue = globals.queue;
 
 function parseQueue() {
-    return queue.map((q, idx) => `${idx + 1}. ${q.username}`).join('\n');
+    return queue.length === 0 ? "The queue is empty" : queue.map((q, idx) => `${idx + 1}. ${q.username}`).join('\n');
 }
 
 function addToQueue(queueObj) {
