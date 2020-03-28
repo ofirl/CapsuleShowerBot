@@ -3,6 +3,7 @@ let keyboardUtils = require('./utils/Keyboard');
 let consts = require('./consts');
 let globals = require('./globals');
 let callbackHandlers = require('./utils/callbackHandlers');
+let queueUtils = require('./utils/QueueUtils');
 
 const token = process.env.TOKEN;
 
@@ -42,6 +43,12 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
     const chatId = msg.chat.id;
     //const resp = match[1]; // the captured "whatever"
 
+    let inQueue = queueUtils.findInQueue(msg.from.id);
+    let queueActions = inQueue ? 
+    [{ text: "Remove from queue", callback_data: "removeFromQueue" }]
+    : 
+    [{ text: "Add me to queue", callback_data: "addToQueue" }]
+
     let resp = `Hello ${msg.from.username},\nI'm ShowerBot,\nHow can i help?`;
 
     // send back the matched "whatever" to the chat
@@ -49,10 +56,10 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
         reply_markup: {
             //"keyboard": [["Sample text", "Second sample"], ["Keyboard"], ["I'm robot"]]
             inline_keyboard: [
-                [{ text: "Add me to queue", callback_data: "addToQueue" }],
+                queueActions,
                 [{ text: "Show queue", callback_data: "showQueue" }],
-                [{ text: "End current shower", callback_data: "endCurrentShower" }],
-                [{ text: "Take a break", callback_data: "break" }]
+                // [{ text: "End current shower", callback_data: "endCurrentShower" }],
+                // [{ text: "Take a break", callback_data: "break" }]
             ]
         }
     });

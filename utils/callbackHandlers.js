@@ -8,9 +8,9 @@ function showQueue(bot, msg) {
 }
 
 function addToQueue(bot, msg) {
-    let currentIndex = queueUtils.queue.findIndex((q) => q.id === msg.from.id);
-    if (currentIndex !== -1) {
-        bot.sendMessage(msg.from.id, `You are already number ${currentIndex + 1} in the queue`);
+    let currentNumber = queueUtils.getNumberInQueue(msg.from.id);
+    if (currentNumber != null) {
+        bot.sendMessage(msg.from.id, `You are already number ${currentNumber + 1} in the queue`);
         return;
     }
 
@@ -19,7 +19,7 @@ function addToQueue(bot, msg) {
 }
 
 function removeFromQueue(bot, msg) {
-
+    queueUtils.removeFromQueue(msg.from.id);
 }
 
 const callbackHandlersMap = {
