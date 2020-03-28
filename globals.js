@@ -14,6 +14,10 @@ const queue = [
     // }
 ];
 
+const doneQueue = [
+
+];
+
 const state = {
     break: false,
 };
@@ -22,4 +26,5 @@ module.exports = {
     // chatStates,
     state,
     queue,
+    doneQueue,
 };

@@ -16,6 +16,7 @@ function adminStart(bot, msg) {
             inline_keyboard: [
                 ...breakActions,
                 [{ text: "Show queue", callback_data: "showQueue" }],
+                [{ text: "Show done queue", callback_data: "showDoneQueue" }],
                 // [{ text: "End current shower", callback_data: "endCurrentShower" }],
                 // [{ text: "Take a break", callback_data: "break" }]
             ]
@@ -25,6 +26,10 @@ function adminStart(bot, msg) {
 
 function showQueue(bot, msg) {
     bot.sendMessage(msg.message.chat.id, queueUtils.parseQueue());
+}
+
+function showDoneQueue(bot, msg) {
+    bot.sendMessage(msg.message.chat.id, queueUtils.parseDoneQueue());
 }
 
 function endBreak(bot, msg) {
@@ -52,6 +57,7 @@ function startBreak(bot, msg) {
 const adminsHandlersMap = {
     start: adminStart,
     showQueue,
+    showDoneQueue,
     endBreak,
     startBreak,
 };

@@ -1,9 +1,14 @@
 let globals = require('../globals');
 
 let queue = globals.queue;
+let doneQueue = globals.doneQueue;
 
 function parseQueue() {
-    return queue.length === 0 ? "The queue is empty" : queue.map((q, idx) => `${idx + 1}. ${q.first_name || ""} ${q.last_name || ""}`).join('\n');
+    return queue.length === 0 ? "The queue is empty" : queue.map((q, idx) => `${idx + 1}. ${q.first_name || ""} ${q.last_name || ""} - @${q.username}`).join('\n');
+}
+
+function parseDoneQueue() {
+    return doneQueue.length === 0 ? "The queue is empty" : doneQueue.map((q, idx) => `${idx + 1}. ${q.first_name || ""} ${q.last_name || ""} - @${q.username}`).join('\n');
 }
 
 function addToQueue(queueObj) {
@@ -12,11 +17,11 @@ function addToQueue(queueObj) {
 }
 
 function removeFromQueue(id) {
-    let index = queue.findIndex((q) => q.id === id);;
+    let index = queue.findIndex((q) => q.id === id);
     if (index === -1)
         return;
 
-    queue.splice(index - 1, 1);
+    doneQueue.push(queue.splice(index - 1, 1));
 }
 
 function findInQueue(id) {
@@ -43,7 +48,9 @@ function sendToAllQueue(bot, msg, text) {
 
 module.exports = {
     queue,
+    doneQueue,
     parseQueue,
+    parseDoneQueue,
     addToQueue,
     removeFromQueue,
     findInQueue,
