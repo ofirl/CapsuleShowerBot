@@ -60,7 +60,7 @@ function removeFromQueue(bot, msg) {
 function endCurrentShower(bot, msg) {
     queueUtils.popQueue();
 
-    bot.editMessageText("Hope you enjoyed your shower :)\nAre there hot water left?",
+    bot.editMessageText("Hope you enjoyed your shower :)\nAre there any hot water left?",
         {
             reply_markup: {
                 inline_keyboard: [
