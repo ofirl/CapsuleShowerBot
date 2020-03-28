@@ -11,7 +11,7 @@ app.get('/', function (req, res) {
   res.json({ version: packageInfo.version });
 });
 
-var server = app.listen(process.env.PORT, //"0.0.0.0", 
+var server = app.listen(process.env.PORT, "0.0.0.0", 
 () => {
   console.log(`Express server is listening on ${process.env.PORT}`);
 }
