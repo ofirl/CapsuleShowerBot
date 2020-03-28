@@ -3,7 +3,7 @@ let globals = require('../globals');
 let queue = globals.queue;
 
 function parseQueue() {
-    return queue.length === 0 ? "The queue is empty" : queue.map((q, idx) => `${idx + 1}. ${q.username}`).join('\n');
+    return queue.length === 0 ? "The queue is empty" : queue.map((q, idx) => `${idx + 1}. ${q.first_name || ""} ${q.last_name || ""}`).join('\n');
 }
 
 function addToQueue(queueObj) {
@@ -35,6 +35,12 @@ function popQueue() {
     queue.splice(0, 1);
 };
 
+function sendToAllQueue(bot, msg, text) {
+    queue.forEach((q) => {
+        bot.sendMessage(q.id, text);
+    });
+}
+
 module.exports = {
     queue,
     parseQueue,
@@ -43,4 +49,5 @@ module.exports = {
     findInQueue,
     getNumberInQueue,
     popQueue,
+    sendToAllQueue,
 };

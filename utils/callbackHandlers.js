@@ -47,8 +47,6 @@ function removeFromQueue(bot, msg) {
 
 function endCurrentShower(bot, msg) {
     queueUtils.popQueue();
-    if (queueUtils.queue.length < 2)
-        return;
 
     bot.editMessageText("Hope you enjoyed your shower :)\nAre there hot water left?",
         {
@@ -64,12 +62,27 @@ function endCurrentShower(bot, msg) {
     );
 }
 
-function callNextInLine() {
+function callNextInLine(bot, msg) {
+    bot.editMessageText("Hope you enjoyed your shower :)",
+        {
+            chat_id: msg.message.chat.id,
+            message_id: msg.message.message_id
+        }
+    );
+    
+    if (queueUtils.queue.length < 2)
+        return;
+
     bot.sendMessage(queueUtils.queue[1].id, `You are next in line, get ready`);
 }
 
-function takeWaterBreak() {
-    setTimeout(() => callNextInLine(), 1000 * 60 * 15);
+function takeWaterBreak(bot, msg) {
+    bot.editMessageText("Hope you enjoyed your shower :)",
+        {
+            chat_id: msg.message.chat.id,
+            message_id: msg.message.message_id
+        }
+    );
 }
 
 const callbackHandlersMap = {

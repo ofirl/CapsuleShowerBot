@@ -1,9 +1,9 @@
-const chatStates = [
-    // {
-    //     chatId: 1,
-    //     // ...state
-    // },
-];
+// const chatStates = [
+//     // {
+//     //     chatId: 1,
+//     //     // ...state
+//     // },
+// ];
 
 const queue = [
     // {
@@ -14,7 +14,12 @@ const queue = [
     // }
 ];
 
+const state = {
+    break: false,
+};
+
 module.exports = {
-    chatStates,
+    // chatStates,
+    state,
     queue,
 };

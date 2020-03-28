@@ -3,6 +3,7 @@ let keyboardUtils = require('./utils/Keyboard');
 let consts = require('./consts');
 let globals = require('./globals');
 let callbackHandlers = require('./utils/callbackHandlers');
+let adminsHandlers = require('./utils/adminsHandlers');
 let queueUtils = require('./utils/QueueUtils');
 
 const token = process.env.TOKEN;
@@ -42,6 +43,10 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
 
     const chatId = msg.chat.id;
     //const resp = match[1]; // the captured "whatever"
+    if (chatId === consts.adminGroupChatId) {
+        adminsHandlers.adminsHandlersMap['start'](bot, msg);
+        return;
+    }
 
     let numberInQueue = queueUtils.getNumberInQueue(msg.from.id);
     let queueActions = [];
@@ -71,6 +76,12 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
 
 bot.on('callback_query', (msg) => {
     console.log(msg);
+
+    const chatId = msg.message.chat.id;
+    if (chatId === consts.adminGroupChatId) {
+        adminsHandlers.adminsHandlersMap[msg.data](bot, msg);
+        return;
+    }
 
     callbackHandlers.callbackHandlersMap[msg.data](bot, msg);
 });
