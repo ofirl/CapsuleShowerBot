@@ -34,6 +34,7 @@ module.exports = {
     queue,
     parseQueue,
     addToQueue,
+    removeFromQueue,
     findInQueue,
     getNumberInQueue,
 };
