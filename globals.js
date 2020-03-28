@@ -19,7 +19,7 @@ const doneQueue = [
 ];
 
 const state = {
-    break: false,
+    break: true,
 };
 
 module.exports = {

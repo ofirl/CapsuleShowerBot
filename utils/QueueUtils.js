@@ -20,8 +20,6 @@ function removeFromQueue(id) {
     let index = queue.findIndex((q) => q.id === id);
     if (index === -1)
         return;
-
-    doneQueue.push(queue.splice(index - 1, 1));
 }
 
 function findInQueue(id) {
@@ -37,7 +35,7 @@ function getNumberInQueue(id) {
 }
 
 function popQueue() {
-    queue.splice(0, 1);
+    doneQueue.push(...queue.splice(0, 1));
 };
 
 function sendToAllQueue(bot, msg, text) {

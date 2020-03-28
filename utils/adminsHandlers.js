@@ -34,18 +34,26 @@ function showDoneQueue(bot, msg) {
 }
 
 function endBreak(bot, msg) {
-    stateManager.endBreak(bot, msg);
-
-    bot.editMessageText(`Break ended`,
-        {
-            chat_id: msg.message.chat.id,
-            message_id: msg.message.message_id
-        }
-    );
+    if (stateManager.endBreak(bot, msg)) {
+        bot.editMessageText(`Break ended`,
+            {
+                chat_id: msg.message.chat.id,
+                message_id: msg.message.message_id
+            }
+        );
+    }
+    else {
+        bot.editMessageText(`The queue is empty dummy, still on a break...`,
+            {
+                chat_id: msg.message.chat.id,
+                message_id: msg.message.message_id
+            }
+        );
+    }
 }
 
 function startBreak(bot, msg) {
-    stateManager.startBreak(bot, msg);
+    stateManager.startBreak(bot, msg, false);
 
     bot.editMessageText(`Break started`,
         {

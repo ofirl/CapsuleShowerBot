@@ -1,5 +1,7 @@
 let globals = require('../globals');
 let queueUtils = require('./QueueUtils');
+let stateUtils = require('./stateManager');
+let consts = require('../consts');
 
 console.log(globals);
 
@@ -33,6 +35,9 @@ function addToQueue(bot, msg) {
         }
     );
     bot.sendMessage(msg.from.id, `You have been added to the queue,\nYou are number ${numberInQueue}`);
+
+    if (queueUtils.queue.length === 1)
+        bot.sendMessage(consts.adminGroupChatId, `There are people waiting to take a shower`);
 }
 
 function removeFromQueue(bot, msg) {
@@ -60,6 +65,11 @@ function endCurrentShower(bot, msg) {
             message_id: msg.message.message_id
         }
     );
+
+    if (queueUtils.queue.length === 0) {
+        stateUtils.startBreak(bot, msg);
+        bot.sendMessage(consts.adminGroupChatId, "The queue is now empty,\nTaking a break");
+    }
 }
 
 function callNextInLine(bot, msg) {
@@ -70,16 +80,21 @@ function callNextInLine(bot, msg) {
         }
     );
 
-    if (queueUtils.queue.length < 2)
+    if (queueUtils.queue.length < 1)
         return;
 
-    bot.sendMessage(queueUtils.queue[1].id, `You are next in line, get ready`);
     bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
         reply_markup: {
             inline_keyboard: [
                 [{ text: "End shower", callback_data: "endCurrentShower" }],
             ]
-        });
+        }
+    });
+
+    if (queueUtils.queue.length < 2)
+        return;
+
+    bot.sendMessage(queueUtils.queue[1], `${queueUtils.queue[0].first_name || ""} ${queueUtils.queue[0].last_name || ""} ${queueUtils.queue[0].username ? `(@${queueUtils.queue[0].username})` : ""} is now going to the shower,\nYou can get ready, you are next `);
 }
 
 function takeWaterBreak(bot, msg) {
@@ -89,6 +104,9 @@ function takeWaterBreak(bot, msg) {
             message_id: msg.message.message_id
         }
     );
+
+    stateUtils.startBreak(bot, msg);
+    bot.sendMessage(consts.adminGroupChatId, `There are no hot water, taking a break`);
 }
 
 const callbackHandlersMap = {
