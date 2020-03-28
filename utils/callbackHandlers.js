@@ -7,7 +7,7 @@ let mathUtils = require('./mathUtils');
 console.log(globals);
 
 function showQueue(bot, msg) {
-    bot.sendMessage(msg.from.id, "Showered:\n" + queueUtils.parseQueue());
+    bot.sendMessage(msg.from.id, "Waiting:\n" + queueUtils.parseQueue());
     bot.answerCallbackQuery(msg.id);
 
     bot.answerCallbackQuery(msg.id);
