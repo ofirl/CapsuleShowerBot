@@ -31,6 +31,10 @@ function getNumberInQueue(id) {
     return number + 1;
 }
 
+function popQueue() {
+    queue.splice(0, 1);
+};
+
 module.exports = {
     queue,
     parseQueue,
@@ -38,4 +42,5 @@ module.exports = {
     removeFromQueue,
     findInQueue,
     getNumberInQueue,
+    popQueue,
 };

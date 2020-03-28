@@ -45,10 +45,40 @@ function removeFromQueue(bot, msg) {
     );
 }
 
+function endCurrentShower(bot, msg) {
+    queueUtils.popQueue();
+    if (queueUtils.queue.length < 2)
+        return;
+
+    bot.editMessageText("Hope you enjoyed your shower :)\nAre there hot water left?",
+        {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Yes", callback_data: "callNextInLine" }],
+                    [{ text: "No", callback_data: "takeWaterBreak" }],
+                ]
+            },
+            chat_id: msg.message.chat.id,
+            message_id: msg.message.message_id
+        }
+    );
+}
+
+function callNextInLine() {
+    bot.sendMessage(queueUtils.queue[1].id, `You are next in line, get ready`);
+}
+
+function takeWaterBreak() {
+    setTimeout(() => callNextInLine(), 1000 * 60 * 15);
+}
+
 const callbackHandlersMap = {
     showQueue,
     addToQueue,
     removeFromQueue,
+    endCurrentShower,
+    callNextInLine,
+    takeWaterBreak,
 };
 
 module.exports = {
