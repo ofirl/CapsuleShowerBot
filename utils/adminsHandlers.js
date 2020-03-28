@@ -81,7 +81,11 @@ function resetQueues(bot, msg) {
     );
 
     bot.answerCallbackQuery(msg.id);
-};
+}
+
+function addToQueueByIndex(bot, msg) {
+    // queueUtils.addToQueueByIndex();
+}
 
 const adminsHandlersMap = {
     start: adminStart,
@@ -90,6 +94,7 @@ const adminsHandlersMap = {
     endBreak,
     startBreak,
     resetQueues,
+    addToQueueByIndex,
 };
 
 module.exports = {

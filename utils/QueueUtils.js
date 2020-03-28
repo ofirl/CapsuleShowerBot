@@ -55,6 +55,10 @@ function resetQueues(bot, msg) {
     doneQueue = [];
 };
 
+function addToQueueByIndex(queueObj, index) {
+    queue.splice(index, 0, queueObj);
+}
+
 module.exports = {
     queue,
     doneQueue,
@@ -67,4 +71,5 @@ module.exports = {
     popQueue,
     sendToAllQueue,
     resetQueues,
+    addToQueueByIndex,
 };
