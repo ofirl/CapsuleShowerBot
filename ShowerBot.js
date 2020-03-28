@@ -49,7 +49,7 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
         reply_markup: {
             //"keyboard": [["Sample text", "Second sample"], ["Keyboard"], ["I'm robot"]]
             inline_keyboard: [
-                [{ text: "Add to queue", callback_data: "addToQueue" }],
+                [{ text: "Add me to queue", callback_data: "addToQueue" }],
                 [{ text: "Show queue", callback_data: "showQueue" }],
                 [{ text: "End current shower", callback_data: "endCurrentShower" }],
                 [{ text: "Take a break", callback_data: "break" }]
