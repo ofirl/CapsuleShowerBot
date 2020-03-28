@@ -4,7 +4,7 @@ let queueUtils = require('./QueueUtils');
 console.log(globals);
 
 function showQueue(bot, msg) {
-    bot.sendMessage(msg.from.id, queueUtils.parseQueue());
+    bot.sendMessage(msg.from.id, "Showered:\n" + queueUtils.parseQueue());
 }
 
 function addToQueue(bot, msg) {
