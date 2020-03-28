@@ -46,6 +46,11 @@ function sendToAllQueue(bot, msg, text) {
     });
 }
 
+function resetQueues() {
+    queue = [];
+    doneQueue = [];
+};
+
 module.exports = {
     queue,
     doneQueue,
@@ -57,4 +62,5 @@ module.exports = {
     getNumberInQueue,
     popQueue,
     sendToAllQueue,
+    resetQueues,
 };

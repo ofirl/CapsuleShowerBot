@@ -17,6 +17,7 @@ function adminStart(bot, msg) {
                 ...breakActions,
                 [{ text: "Show queue", callback_data: "showQueue" }],
                 [{ text: "Show done queue", callback_data: "showDoneQueue" }],
+                [{ text: "Clear queues", callback_data: "resetQueues" }],
                 // [{ text: "End current shower", callback_data: "endCurrentShower" }],
                 // [{ text: "Take a break", callback_data: "break" }]
             ]
@@ -54,12 +55,23 @@ function startBreak(bot, msg) {
     );
 }
 
+function resetQueues(bot, msg) {
+    queueUtils.resetQueues();
+    bot.editMessageText(`Queues cleared`,
+        {
+            chat_id: msg.message.chat.id,
+            message_id: msg.message.message_id
+        }
+    );
+};
+
 const adminsHandlersMap = {
     start: adminStart,
     showQueue,
     showDoneQueue,
     endBreak,
     startBreak,
+    resetQueues,
 };
 
 module.exports = {
