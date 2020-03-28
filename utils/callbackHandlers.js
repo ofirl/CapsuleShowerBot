@@ -91,7 +91,9 @@ function callNextInLine(bot, msg) {
     );
     bot.sendSticker(msg.message.chat.id, consts.showerDoneStickers[mathUtils.getRandomNumber(0, consts.showerDoneStickers.length - 1)]);
 
-    if (queueUtils.queue.length < 1)
+    bot.answerCallbackQuery(msg.id);
+
+    if (queueUtils.queue.length < 1 || globals.state.break)
         return;
 
     bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
@@ -106,8 +108,6 @@ function callNextInLine(bot, msg) {
         return;
 
     bot.sendMessage(queueUtils.queue[1].id, `${queueUtils.queue[0].first_name || ""} ${queueUtils.queue[0].last_name || ""} ${queueUtils.queue[0].username ? `(@${queueUtils.queue[0].username})` : ""} is now going to the shower,\nYou can get ready, you are next `);
-
-    bot.answerCallbackQuery(msg.id);
 }
 
 function takeWaterBreak(bot, msg) {
