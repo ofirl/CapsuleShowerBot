@@ -12,11 +12,11 @@ function addToQueue(queueObj) {
 }
 
 function removeFromQueue(id) {
-    let index = getNumberInQueue(id);
-    if (index == null)
+    let index = queue.findIndex((q) => q.id === id);;
+    if (index === -1)
         return;
 
-    queue.splice(index, 1);
+    queue.splice(index - 1, 1);
 }
 
 function findInQueue(id) {

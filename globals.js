@@ -1,8 +1,8 @@
 const chatStates = [
-    {
-        chatId: 1,
-        // ...state
-    },
+    // {
+    //     chatId: 1,
+    //     // ...state
+    // },
 ];
 
 const queue = [
