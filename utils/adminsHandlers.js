@@ -26,11 +26,11 @@ function adminStart(bot, msg) {
 }
 
 function showQueue(bot, msg) {
-    bot.sendMessage(msg.message.chat.id, queueUtils.parseQueue());
+    bot.sendMessage(msg.message.chat.id, "Waiting:\n" + queueUtils.parseQueue());
 }
 
 function showDoneQueue(bot, msg) {
-    bot.sendMessage(msg.message.chat.id, queueUtils.parseDoneQueue());
+    bot.sendMessage(msg.message.chat.id, "Showered:\n" + queueUtils.parseDoneQueue());
 }
 
 function endBreak(bot, msg) {
