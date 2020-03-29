@@ -25,7 +25,7 @@ function removeFromQueue(id) {
     if (index === -1)
         return;
 
-    queue.splice(index, 1)
+    return queue.splice(index, 1)[0];
 }
 
 function findInQueue(id) {
@@ -42,21 +42,29 @@ function getNumberInQueue(id) {
 
 function popQueue() {
     doneQueue.push(...queue.splice(0, 1));
+
+    return true;
 };
 
 function sendToAllQueue(bot, msg, text) {
     queue.forEach((q) => {
         bot.sendMessage(q.id, text);
     });
+
+    return true;
 }
 
 function resetQueues(bot, msg) {
     queue = [];
     doneQueue = [];
+
+    return true;
 };
 
 function addToQueueByIndex(queueObj, index) {
     queue.splice(index, 0, queueObj);
+
+    return true;
 }
 
 module.exports = {

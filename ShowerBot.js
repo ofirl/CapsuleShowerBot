@@ -90,6 +90,14 @@ bot.on('callback_query', (msg) => {
 // logger
 bot.on('message', (msg) => {
     console.log(msg);
+
+    if (msg.text.startsWith('/'))
+        return;
+
+    if (msg.chat.id === consts.adminGroupChatId) {
+        adminsHandlers.adminsHandlersMap["message"](bot, msg);
+        return;
+    }
 });
 
 bot.on('sticker', (msg) => {

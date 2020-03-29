@@ -3,14 +3,12 @@ let queueUtils = require('./QueueUtils');
 let stateUtils = require('./stateManager');
 let consts = require('../consts');
 let mathUtils = require('./mathUtils');
+let { answerCallbackQueryMiddleware } = require('./middlewares');
 
 console.log(globals);
 
 function showQueue(bot, msg) {
     bot.sendMessage(msg.from.id, "Waiting:\n" + queueUtils.parseQueue());
-    bot.answerCallbackQuery(msg.id);
-
-    bot.answerCallbackQuery(msg.id);
 }
 
 function addToQueue(bot, msg) {
@@ -42,8 +40,6 @@ function addToQueue(bot, msg) {
 
     if (queueUtils.queue.length === 1)
         bot.sendMessage(consts.adminGroupChatId, `There are people waiting to take a shower`);
-
-    bot.answerCallbackQuery(msg.id);
 }
 
 function removeFromQueue(bot, msg) {
@@ -54,8 +50,6 @@ function removeFromQueue(bot, msg) {
             message_id: msg.message.message_id
         }
     );
-
-    bot.answerCallbackQuery(msg.id);
 }
 
 function endCurrentShower(bot, msg) {
@@ -78,8 +72,6 @@ function endCurrentShower(bot, msg) {
         stateUtils.startBreak(bot, msg);
         bot.sendMessage(consts.adminGroupChatId, "The queue is now empty,\nTaking a break");
     }
-
-    bot.answerCallbackQuery(msg.id);
 }
 
 function callNextInLine(bot, msg) {
@@ -90,8 +82,6 @@ function callNextInLine(bot, msg) {
         }
     );
     bot.sendSticker(msg.message.chat.id, consts.showerDoneStickers[mathUtils.getRandomNumber(0, consts.showerDoneStickers.length - 1)]);
-
-    bot.answerCallbackQuery(msg.id);
 
     if (queueUtils.queue.length < 1 || globals.state.break)
         return;
@@ -121,17 +111,20 @@ function takeWaterBreak(bot, msg) {
 
     stateUtils.startBreak(bot, msg);
     bot.sendMessage(consts.adminGroupChatId, `There are no hot water, taking a break`);
-
-    bot.answerCallbackQuery(msg.id);
 }
 
 const callbackHandlersMap = {
-    showQueue,
-    addToQueue,
-    removeFromQueue,
-    endCurrentShower,
-    callNextInLine,
-    takeWaterBreak,
+    ...[
+        showQueue,
+        addToQueue,
+        removeFromQueue,
+        endCurrentShower,
+        callNextInLine,
+        takeWaterBreak
+    ].reduce((acc, f) => {
+        acc[f.name] = answerCallbackQueryMiddleware(f);
+        return acc;
+    }, {}),
 };
 
 module.exports = {

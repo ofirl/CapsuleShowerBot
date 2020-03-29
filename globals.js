@@ -20,6 +20,7 @@ const doneQueue = [
 
 const state = {
     break: true,
+    adminMove: null,
 };
 
 module.exports = {
