@@ -13,13 +13,15 @@ function adminStart(bot, msg) {
         :
         breakActions.push([{ text: "Start break", callback_data: "startBreak" }]);
 
+    if (queueUtils.queue.length >= 2)
+        breakActions.push([{ text: "Move Someone to number", callback_data: "moveSomeoneToNumber" }]);
+
     bot.sendMessage(msg.chat.id, "Hi :)", {
         reply_markup: {
             inline_keyboard: [
                 ...breakActions,
-                [{ text: "Show queue", callback_data: "showQueue" }, { text: "Show done queue", callback_data: "showDoneQueue" }],
                 // [{ text: "Show done queue", callback_data: "showDoneQueue" }],
-                [{ text: "Move Someone to number", callback_data: "moveSomeoneToNumber" }],
+                [{ text: "Show queue", callback_data: "showQueue" }, { text: "Show done queue", callback_data: "showDoneQueue" }],
                 [{ text: "Clear queues", callback_data: "resetQueues" }],
                 // [{ text: "End current shower", callback_data: "endCurrentShower" }],
                 // [{ text: "Take a break", callback_data: "break" }]
@@ -77,7 +79,6 @@ function resetQueues(bot, msg) {
 }
 
 function moveSomeoneToNumber(bot, msg) {
-    // queueUtils.addToQueueByIndex();
     bot.sendMessage(msg.message.chat.id, `Choose a number you want to move (1 - ${queueUtils.queue.length})`);
 
     globals.state.adminMove = {};
@@ -89,6 +90,8 @@ function messageHandler(bot, msg) {
             let src;
             try {
                 src = parseInt(msg.text);
+                if (isNaN(src))
+                    throw {};
             }
             catch (e) {
                 bot.sendMessage(msg.chat.id, `Oops...\nIt appears there was an error parsing your number, please try again`, {
@@ -118,6 +121,8 @@ function messageHandler(bot, msg) {
             let dst;
             try {
                 dst = parseInt(msg.text);
+                if (isNaN(dst))
+                    throw {};
             }
             catch (e) {
                 bot.sendMessage(msg.chat.id, `Oops...\nIt appears there was an error parsing your number, please try again`, {
