@@ -91,12 +91,14 @@ bot.on('callback_query', (msg) => {
 bot.on('message', (msg) => {
     console.log(msg);
 
-    if (msg.text.startsWith('/'))
-        return;
+    if (msg.text) {
+        if (msg.text.startsWith('/'))
+            return;
 
-    if (msg.chat.id === consts.adminGroupChatId) {
-        adminsHandlers.adminsHandlersMap["message"](bot, msg);
-        return;
+        if (msg.chat.id === consts.adminGroupChatId) {
+            adminsHandlers.adminsHandlersMap["message"](bot, msg);
+            return;
+        }
     }
 });
 
