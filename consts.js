@@ -1,4 +1,4 @@
-const adminGroupChatId = -359534787;
+const adminGroupChatId = -1001349493746;
 
 const showerDoneStickers = [
     'CAACAgIAAxkBAAIC415_Q6ABYGrpRapRTU2MzeBkJCDtAAJZAANEDc8X-HZZ1vlXfjgYBA',
