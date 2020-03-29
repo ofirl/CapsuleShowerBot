@@ -1,3 +1,4 @@
+let consts = require('../consts');
 let globals = require('../globals');
 let queueUtils = require('./QueueUtils');
 let stateManager = require('./stateManager');
@@ -28,7 +29,7 @@ function adminStart(bot, msg) {
 }
 
 function showQueue(bot, msg) {
-    bot.sendMessage(msg.message.chat.id, "Waiting:\n" + queueUtils.parseQueue());
+    bot.sendMessage(consts.adminGroupChatId, "Waiting:\n" + queueUtils.parseQueue());
 }
 
 function showDoneQueue(bot, msg) {
@@ -142,7 +143,8 @@ function messageHandler(bot, msg) {
             // globals.state.adminMove["dst"] = dst;
             let src = globals.state.adminMove.src;
             queueUtils.addToQueueByIndex(queueUtils.removeFromQueue(queueUtils.queue[src - 1].id), dst - 1);
-            // bot.sendMessage(msg.chat.id, `Moved :)`);
+            let movedObj = queueUtils.queue[dst - 1];
+            bot.sendMessage(msg.chat.id, `${movedObj.first_name || ""} ${movedObj.last_name || ""}${movedObj.username ? ` - @${movedObj.username}` : ""} was moved`);
 
             showQueue(bot, msg);
 
