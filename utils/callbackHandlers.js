@@ -53,6 +53,16 @@ function removeFromQueue(bot, msg) {
 }
 
 function endCurrentShower(bot, msg) {
+    if (queueUtils.getNumberInQueue(msg.message.chat.id) !== 1) {
+        bot.editMessageText("You are not the first in queue...",
+            {
+                chat_id: msg.message.chat.id,
+                message_id: msg.message.message_id
+            }
+        );
+        return;
+    }
+
     queueUtils.popQueue();
 
     bot.editMessageText("Hope you enjoyed your shower :)\nAre there any hot water left?",
