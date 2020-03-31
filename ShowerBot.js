@@ -56,8 +56,8 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
     else
         queueActions.push([{ text: "Add me to queue", callback_data: "addToQueue" }]);
 
-    if (queueUtils.queue.length > 1)
-        queueActions.push([{ text: "Switch", callback_data: "switchPosition" }]);
+    // if (queueUtils.queue.length > 1)
+    //     queueActions.push([{ text: "Switch", callback_data: "switchPosition" }]);
 
     let resp = `Hello ${msg.from.username},\nI'm ShowerBot,\nHow can i help?`;
 
