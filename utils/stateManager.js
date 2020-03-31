@@ -1,6 +1,7 @@
 let consts = require('../consts');
 let globals = require('../globals');
 let queueUtils = require('./QueueUtils');
+let userUtils = require('./userUtils');
 
 function startBreak(bot, msg) {
     globals.state.break = true;
@@ -28,7 +29,7 @@ function endBreak(bot, msg) {
     });
 
     if (queueUtils.queue.length >= 2)
-        bot.sendMessage(queueUtils.queue[1].id, `${queueUtils.queue[0].first_name || ""} ${queueUtils.queue[0].last_name || ""} ${queueUtils.queue[0].username ? `(@${queueUtils.queue[0].username})` : ""} is now going to the shower,\nYou can get ready, you are next `);
+        bot.sendMessage(queueUtils.queue[1].id, `${userUtils.formatName(queueUtils.queue[0])} is now going to the shower,\nYou can get ready, you are next `);
 
     return true;
 }
