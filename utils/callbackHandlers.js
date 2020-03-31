@@ -1,6 +1,7 @@
 let globals = require('../globals');
 let queueUtils = require('./QueueUtils');
 let stateUtils = require('./stateManager');
+let userUtils = require('./userUtils');
 let consts = require('../consts');
 let mathUtils = require('./mathUtils');
 let { answerCallbackQueryMiddleware } = require('./middlewares');
@@ -38,8 +39,7 @@ function addToQueue(bot, msg) {
     );
     bot.sendMessage(msg.from.id, `You have been added to the queue,\nYou are number ${numberInQueue}`);
 
-    if (queueUtils.queue.length === 1)
-        bot.sendMessage(consts.adminGroupChatId, `There are people waiting to take a shower`);
+    bot.sendMessage(consts.adminGroupChatId, `${userUtils.formatName(msg.from)} has joind the queue`);
 }
 
 function removeFromQueue(bot, msg) {
