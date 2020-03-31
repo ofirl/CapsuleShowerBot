@@ -87,34 +87,18 @@ bot.on('callback_query', (msg) => {
 });
 
 bot.onText(/^[^\/].*/, (msg) => {
-    // if (msg.text) {
-    //     if (msg.text.startsWith('/'))
-    //         return;
-
     if (msg.chat.id === consts.adminGroupChatId) {
         adminsHandlers.adminsHandlersMap["message"](bot, msg);
         return;
     }
-    //     }
 });
 
 // logger
 bot.on('message', (msg) => {
     console.log(msg);
-
-    // if (msg.text) {
-    //     if (msg.text.startsWith('/'))
-    //         return;
-
-    //     if (msg.chat.id === consts.adminGroupChatId) {
-    //         adminsHandlers.adminsHandlersMap["message"](bot, msg);
-    //         return;
-    //     }
-    // }
 });
 
 bot.on('sticker', (msg) => {
-    // bot.sendSticker(msg.chat.id, "CAADAQADrwAD82LeB9V0bTtHBQwSAg");
     bot.sendSticker(msg.chat.id, consts.showerDoneStickers[mathUtils.getRandomNumber(0, consts.showerDoneStickers.length - 1)]);
 });
 

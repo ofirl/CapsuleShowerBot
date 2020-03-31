@@ -170,6 +170,15 @@ function messageHandler(bot, msg) {
 
             queueUtils.sendToAllQueue(bot, msg, 'The queue have changed,\n' + queueUtils.parseQueue(), queueStartNotification, queueEndNotification);
 
+            if (dst === 1 || src === 1)
+                bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: "End shower", callback_data: "endCurrentShower" }],
+                        ]
+                    }
+                });
+
             globals.state.adminMove = null;
         }
     }
