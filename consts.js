@@ -1,4 +1,8 @@
-const adminGroupChatId = -1001349493746;
+let adminGroupChatId;
+if (process.env.NODE_ENV === 'production')
+    adminGroupChatId = -1001349493746;
+else
+    adminGroupChatId = -429033904;
 
 const showerDoneStickers = [
     'CAACAgIAAxkBAAIC415_Q6ABYGrpRapRTU2MzeBkJCDtAAJZAANEDc8X-HZZ1vlXfjgYBA',

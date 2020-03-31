@@ -1,8 +1,8 @@
 let globals = require('../globals');
 let userUtils = require('./userUtils');
 
-let queue = globals.queue;
-let doneQueue = globals.doneQueue;
+// let queue = globals.queue;
+// let doneQueue = globals.doneQueue;
 
 function queueToString(selectedQueue) {
     return selectedQueue.length === 0 ? "The queue is empty" : selectedQueue.map((q, idx) => `${idx + 1}. ${userUtils.formatName(q)}`).join('\n');
@@ -34,11 +34,16 @@ function findInQueue(id) {
 }
 
 function getNumberInQueue(id) {
+    let queueIndex = getQueueIndex(id);
+    return queueIndex != null ? queueIndex + 1 : null;
+}
+
+function getQueueIndex(id) {
     let number = queue.findIndex((q) => q.id === id);
     if (number === -1)
         return null;
 
-    return number + 1;
+    return number;
 }
 
 function popQueue() {
@@ -47,10 +52,14 @@ function popQueue() {
     return true;
 };
 
-function sendToAllQueue(bot, msg, text) {
-    queue.forEach((q) => {
-        bot.sendMessage(q.id, text);
-    });
+function sendToAllQueue(bot, msg, text, from = 0, to = queue.length - 1) {
+    let i;
+    for (i = from; i <= to; i++)
+        bot.sendMessage(queue[i].id, text);
+
+    // queue.forEach((q) => {
+    //     bot.sendMessage(q.id, text);
+    // });
 
     return true;
 }
@@ -69,14 +78,15 @@ function addToQueueByIndex(queueObj, index) {
 }
 
 module.exports = {
-    queue,
-    doneQueue,
+    queue: queue,
+    doneQueue: doneQueue,
     parseQueue,
     parseDoneQueue,
     addToQueue,
     removeFromQueue,
     findInQueue,
     getNumberInQueue,
+    getQueueIndex,
     popQueue,
     sendToAllQueue,
     resetQueues,

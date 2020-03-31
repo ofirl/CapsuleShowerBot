@@ -147,11 +147,28 @@ function messageHandler(bot, msg) {
 
             // globals.state.adminMove["dst"] = dst;
             let src = globals.state.adminMove.src;
+
+            if (dst === src) {
+                bot.sendMessage(msg.chat.id, `Oops,\nYou did not make any changes, please try again`, {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: "Cancel", callback_data: "adminCancelMove" }],
+                        ]
+                    }
+                });
+                return;
+            }
+
             queueUtils.addToQueueByIndex(queueUtils.removeFromQueue(queueUtils.queue[src - 1].id), dst - 1);
+
             let movedObj = queueUtils.queue[dst - 1];
             bot.sendMessage(msg.chat.id, `${movedObj.first_name || ""} ${movedObj.last_name || ""}${movedObj.username ? ` - @${movedObj.username}` : ""} was moved`);
-
             showQueue(bot, msg);
+
+            let queueStartNotification = Math.max(Math.min(src, dst) - 1, 0);
+            let queueEndNotification = Math.min(Math.max(src, dst) + 1, queueUtils.queue.length - 1);
+
+            queueUtils.sendToAllQueue(bot, msg, 'The queue have changed,\n' + queueUtils.parseQueue(), queueStartNotification, queueEndNotification);
 
             globals.state.adminMove = null;
         }

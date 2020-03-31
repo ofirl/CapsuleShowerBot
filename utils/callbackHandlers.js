@@ -6,8 +6,6 @@ let consts = require('../consts');
 let mathUtils = require('./mathUtils');
 let { answerCallbackQueryMiddleware } = require('./middlewares');
 
-console.log(globals);
-
 function showQueue(bot, msg) {
     bot.sendMessage(msg.from.id, "Waiting:\n" + queueUtils.parseQueue());
 }
@@ -123,6 +121,19 @@ function takeWaterBreak(bot, msg) {
     bot.sendMessage(consts.adminGroupChatId, `There are no hot water, taking a break`);
 }
 
+function switchPosition(bot, msg) {
+    let currentQueueIndex = queueUtils.getQueueIndex(msg.from.id);
+    if (currentQueueIndex) {
+        bot.editMessageReplyMarkup(
+            {
+                chat_id: msg.message.chat.id,
+                message_id: msg.message.message_id
+            }
+        );
+        bot.sendMessage(msg.from.id, `With who do you want to switch? (1-${queueUtils.queue.length})`);
+    }
+}
+
 const callbackHandlersMap = {
     ...[
         showQueue,
@@ -130,7 +141,8 @@ const callbackHandlersMap = {
         removeFromQueue,
         endCurrentShower,
         callNextInLine,
-        takeWaterBreak
+        takeWaterBreak,
+        switchPosition,
     ].reduce((acc, f) => {
         acc[f.name] = answerCallbackQueryMiddleware(f);
         return acc;

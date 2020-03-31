@@ -25,7 +25,8 @@ const state = {
 
 module.exports = {
     // chatStates,
-    state,
+    globals,
     queue,
     doneQueue,
+    state,
 };

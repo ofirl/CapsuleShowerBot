@@ -1,7 +1,7 @@
 let keyboardUtils = require('./utils/Keyboard');
 
 let consts = require('./consts');
-let globals = require('./globals');
+let { globals } = require('./globals');
 let callbackHandlers = require('./utils/callbackHandlers');
 let adminsHandlers = require('./utils/adminsHandlers');
 let queueUtils = require('./utils/QueueUtils');
@@ -51,10 +51,13 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
 
     let numberInQueue = queueUtils.getNumberInQueue(msg.from.id);
     let queueActions = [];
-    numberInQueue ?
-        queueActions.push([{ text: "Remove from queue", callback_data: "removeFromQueue" }])
-        :
+    if (numberInQueue) {
+        queueActions.push([{ text: "Remove from queue", callback_data: "removeFromQueue" }]);
+        queueActions.push([{ text: "Switch", callback_data: "switchPosition" }]);
+    }
+    else {
         queueActions.push([{ text: "Add me to queue", callback_data: "addToQueue" }]);
+    }   
 
     // if (numberInQueue === 1)
     //     queueActions.push([{ text: "End current shower", callback_data: "endCurrentShower" }]);
@@ -87,19 +90,31 @@ bot.on('callback_query', (msg) => {
     callbackHandlers.callbackHandlersMap[msg.data](bot, msg);
 });
 
+bot.onText(/^[^\/].*/, (msg) => {
+    // if (msg.text) {
+    //     if (msg.text.startsWith('/'))
+    //         return;
+
+    if (msg.chat.id === consts.adminGroupChatId) {
+        adminsHandlers.adminsHandlersMap["message"](bot, msg);
+        return;
+    }
+    //     }
+});
+
 // logger
 bot.on('message', (msg) => {
     console.log(msg);
 
-    if (msg.text) {
-        if (msg.text.startsWith('/'))
-            return;
+    // if (msg.text) {
+    //     if (msg.text.startsWith('/'))
+    //         return;
 
-        if (msg.chat.id === consts.adminGroupChatId) {
-            adminsHandlers.adminsHandlersMap["message"](bot, msg);
-            return;
-        }
-    }
+    //     if (msg.chat.id === consts.adminGroupChatId) {
+    //         adminsHandlers.adminsHandlersMap["message"](bot, msg);
+    //         return;
+    //     }
+    // }
 });
 
 bot.on('sticker', (msg) => {
