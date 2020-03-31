@@ -49,7 +49,7 @@ function removeFromQueue(bot, msg) {
         }
     );
 
-    bot.sendMessage(consts.adminGroupChatId, `${userUtils.formatName(msg.from)} has removed himself from the queue`);
+    bot.sendMessage(consts.adminGroupChatId, `${userUtils.formatName(msg.from)} has left the queue`);
 }
 
 function endCurrentShower(bot, msg) {
