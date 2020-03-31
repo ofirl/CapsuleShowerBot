@@ -123,14 +123,16 @@ function takeWaterBreak(bot, msg) {
 
 function switchPosition(bot, msg) {
     let currentQueueIndex = queueUtils.getQueueIndex(msg.from.id);
-    if (currentQueueIndex) {
-        bot.editMessageReplyMarkup(
+    if (currentQueueIndex != null) {
+        bot.editMessageReplyMarkup({
+
+        },
             {
                 chat_id: msg.message.chat.id,
                 message_id: msg.message.message_id
             }
         );
-        bot.sendMessage(msg.from.id, `With who do you want to switch? (1-${queueUtils.queue.length})`);
+        bot.sendMessage(msg.from.id, `With who do you want to switch? (1-${queueUtils.queue.length})\n${queueUtils.parseQueue()}`);
     }
 }
 

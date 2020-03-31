@@ -51,23 +51,19 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
 
     let numberInQueue = queueUtils.getNumberInQueue(msg.from.id);
     let queueActions = [];
-    if (numberInQueue) {
+    if (numberInQueue != null)
         queueActions.push([{ text: "Remove from queue", callback_data: "removeFromQueue" }]);
-        queueActions.push([{ text: "Switch", callback_data: "switchPosition" }]);
-    }
-    else {
+    else
         queueActions.push([{ text: "Add me to queue", callback_data: "addToQueue" }]);
-    }   
 
-    // if (numberInQueue === 1)
-    //     queueActions.push([{ text: "End current shower", callback_data: "endCurrentShower" }]);
+    if (queueUtils.queue.length > 1)
+        queueActions.push([{ text: "Switch", callback_data: "switchPosition" }]);
 
     let resp = `Hello ${msg.from.username},\nI'm ShowerBot,\nHow can i help?`;
 
     // send back the matched "whatever" to the chat
     bot.sendMessage(msg.chat.id, resp, {
         reply_markup: {
-            //"keyboard": [["Sample text", "Second sample"], ["Keyboard"], ["I'm robot"]]
             inline_keyboard: [
                 ...queueActions,
                 [{ text: "Show queue", callback_data: "showQueue" }],
