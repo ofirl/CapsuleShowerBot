@@ -55,8 +55,8 @@ function sendToAllQueue(bot, msg, text) {
 }
 
 function resetQueues(bot, msg) {
-    queue = [];
-    doneQueue = [];
+    queue.splice(0, queue.length);
+    doneQueue.splice(0, doneQueue.length);
 
     return true;
 };
