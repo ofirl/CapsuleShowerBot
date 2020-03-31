@@ -1,10 +1,11 @@
 let globals = require('../globals');
+let userUtils = require('./userUtils');
 
 let queue = globals.queue;
 let doneQueue = globals.doneQueue;
 
 function queueToString(selectedQueue) {
-    return selectedQueue.length === 0 ? "The queue is empty" : selectedQueue.map((q, idx) => `${idx + 1}. ${q.first_name || ""} ${q.last_name || ""}${q.username ? ` - @${q.username}` : ""}`).join('\n');
+    return selectedQueue.length === 0 ? "The queue is empty" : selectedQueue.map((q, idx) => `${idx + 1}. ${userUtils.formatName(q)}`).join('\n');
 }
 
 function parseQueue() {
