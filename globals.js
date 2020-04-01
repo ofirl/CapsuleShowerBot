@@ -21,6 +21,7 @@ const doneQueue = [
 const state = {
     break: true,
     adminMove: null,
+    activeUserSwitches: [],
 };
 
 module.exports = {

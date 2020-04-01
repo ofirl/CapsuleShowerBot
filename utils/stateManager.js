@@ -34,7 +34,52 @@ function endBreak(bot, msg) {
     return true;
 }
 
+function addUserSwitch(id) {
+    globals.state.activeUserSwitches.push({ from: id });
+
+    return true;
+}
+
+function cancelSwitch(id) {
+    globals.state.activeUserSwitches.splice(globals.state.activeUserSwitches.findIndex((s) => s.from === id), 1);
+
+    return true;
+}
+
+function findUserSwitchByFrom(id) {
+    return globals.state.activeUserSwitches.find((s) => s.from === id);
+}
+
+function findUserSwitchByTo(id) {
+    return globals.state.activeUserSwitches.find((s) => s.to === id);
+}
+
+function confirmSwitch(bot, msg, id) {
+    let userSwitch = findUserSwitchByFrom(id);
+
+    bot.sendMessage(consts.adminGroupChatId, `${userUtils.formatName(queueUtils.findInQueue(userSwitch.from))} and ${userUtils.formatName(queueUtils.findInQueue(userSwitch.to))} was switched,\n${queueUtils.parseQueue()}`);
+
+    let fromIndex = queueUtils.getQueueIndex(userSwitch.from);
+    let toIndex = queueUtils.getQueueIndex(userSwitch.to);
+
+    if (fromIndex === 0 || toIndex === 0)
+        bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "End shower", callback_data: "endCurrentShower" }],
+                ]
+            }
+        });
+
+    return cancelSwitch(id);
+}
+
 module.exports = {
     startBreak,
     endBreak,
+    addUserSwitch,
+    cancelSwitch,
+    findUserSwitchByFrom,
+    findUserSwitchByTo,
+    confirmSwitch,
 };

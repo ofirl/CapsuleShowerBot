@@ -126,6 +126,16 @@ function takeWaterBreak(bot, msg) {
 function switchPosition(bot, msg) {
     let currentQueueIndex = queueUtils.getQueueIndex(msg.from.id);
     if (currentQueueIndex != null) {
+        if (stateUtils.findUserSwitchByFrom(msg.from.id)) {
+            bot.editMessageText("You already have an active switch request,\nOnly 1 active switch request is allowed",
+                {
+                    chat_id: msg.message.chat.id,
+                    message_id: msg.message.message_id
+                }
+            );
+            return
+        }
+
         bot.editMessageReplyMarkup({
 
         },
@@ -134,11 +144,150 @@ function switchPosition(bot, msg) {
                 message_id: msg.message.message_id
             }
         );
-        bot.sendMessage(msg.from.id, `With who do you want to switch? (1-${queueUtils.queue.length})\n${queueUtils.parseQueue()}`);
+
+        stateUtils.addUserSwitch(msg.from.id);
+
+        bot.sendMessage(msg.from.id, `With who do you want to switch? (1-${queueUtils.queue.length})\n${queueUtils.parseQueue()}`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Cancel", callback_data: "cancelSwitch" }],
+                ]
+            }
+        });
+    }
+    else {
+        bot.editMessageText("You are not even in the queue dummy...",
+            {
+                chat_id: msg.message.chat.id,
+                message_id: msg.message.message_id
+            }
+        );
+    }
+}
+
+function cancelSwitch(bot, msg) {
+    stateUtils.cancelSwitch(msg.from.id);
+
+    bot.sendMessage(msg.from.id, `Switch canceled`);
+}
+
+function messageHandler(bot, msg) {
+    let userSwitch = stateUtils.findUserSwitchByFrom(msg.from.id);
+    if (userSwitch) {
+        let dst;
+        try {
+            dst = parseInt(msg.text);
+        }
+        catch (e) {
+            bot.sendMessage(msg.from.id, `Oops...\nIt appears there was an error parsing your number, please try again`, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: "Cancel", callback_data: "cancelSwitch" }],
+                    ]
+                }
+            });
+            return;
+        }
+        if (dst === queueUtils.getNumberInQueue(msg.from.id)) {
+            bot.sendMessage(msg.from.id, `You can't switch places with yourself, please try again`, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: "Cancel", callback_data: "cancelSwitch" }],
+                    ]
+                }
+            });
+            return;
+        }
+        if (dst < 1 || dst > queueUtils.queue.length) {
+            bot.sendMessage(msg.chat.id, `Oops,\nYou did not enter a number between 1 and ${queueUtils.queue.length}, please try again`, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: "Cancel", callback_data: "cancelSwitch" }],
+                    ]
+                }
+            });
+            return;
+        }
+
+        userSwitch.to = queueUtils.queue[dst - 1].id;
+
+        bot.sendMessage(userSwitch.to, `${userUtils.formatName(queueUtils.findInQueue(userSwitch.from))} would like to switch places with you,\nDo you approve?`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Yes", callback_data: "acceptSwitch" }],
+                    [{ text: "No", callback_data: "declineSwitch" }],
+                ]
+            }
+        });
+
+        bot.sendMessage(msg.chat.id, `Message was sent to ${userUtils.formatName(queueUtils.queue[dst - 1])},\non approval you will be switched`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Cancel", callback_data: "cancelSwitch" }],
+                ]
+            }
+        });
+
+        return;
+    }
+}
+
+function declineSwitch(bot, msg) {
+    bot.editMessageReplyMarkup({
+
+    },
+        {
+            chat_id: msg.message.chat.id,
+            message_id: msg.message.message_id
+        }
+    );
+
+    let userSwitch = stateUtils.findUserSwitchByTo(msg.from.id);
+    if (userSwitch) {
+        let from = queueUtils.findInQueue(userSwitch.from);
+
+        stateUtils.cancelSwitch(userSwitch.from);
+
+        bot.sendMessage(from.id, `Your switch request was declined`);
+    }
+    else {
+        bot.sendMessage(msg.chat.id, `Switch request is no longer valid...`);
+    }
+}
+
+function acceptSwitch(bot, msg) {
+    bot.editMessageReplyMarkup({
+
+    },
+        {
+            chat_id: msg.message.chat.id,
+            message_id: msg.message.message_id
+        }
+    );
+
+    let userSwitch = stateUtils.findUserSwitchByTo(msg.from.id);
+    if (userSwitch) {
+        let from = queueUtils.findInQueue(userSwitch.from);
+        let to = queueUtils.findInQueue(userSwitch.to);
+
+        let fromIndex = queueUtils.getQueueIndex(userSwitch.from);
+        let toIndex = queueUtils.getQueueIndex(userSwitch.to);
+
+        queueUtils.queue[fromIndex] = to;
+        queueUtils.queue[toIndex] = from;
+
+        bot.sendMessage(from.id, `You have been switched,\nYou are now number ${queueUtils.getNumberInQueue(from.id)}`);
+        bot.sendMessage(to.id, `You have been switched,\nYou are now number ${queueUtils.getNumberInQueue(to.id)}`);
+
+        stateUtils.confirmSwitch(bot, msg, userSwitch.from);
+    }
+    else {
+        bot.sendMessage(msg.chat.id, `Switch request is no longer valid...`);
     }
 }
 
 const callbackHandlersMap = {
+    message: messageHandler,
     ...[
         showQueue,
         addToQueue,
@@ -147,6 +296,9 @@ const callbackHandlersMap = {
         callNextInLine,
         takeWaterBreak,
         switchPosition,
+        cancelSwitch,
+        declineSwitch,
+        acceptSwitch,
     ].reduce((acc, f) => {
         acc[f.name] = answerCallbackQueryMiddleware(f);
         return acc;

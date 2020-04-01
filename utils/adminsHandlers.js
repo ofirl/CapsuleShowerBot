@@ -79,7 +79,13 @@ function resetQueues(bot, msg) {
 }
 
 function moveSomeoneToNumber(bot, msg) {
-    bot.sendMessage(msg.message.chat.id, `Choose a number you want to move (1 - ${queueUtils.queue.length})`);
+    bot.sendMessage(msg.message.chat.id, `Choose a number you want to move (1 - ${queueUtils.queue.length})`, {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: "Cancel", callback_data: "adminCancelMove" }],
+            ]
+        }
+    });
 
     globals.state.adminMove = {};
 }

@@ -56,8 +56,8 @@ bot.onText(/\/start\b(.*)/, (msg, match) => {
     else
         queueActions.push([{ text: "Add me to queue", callback_data: "addToQueue" }]);
 
-    // if (queueUtils.queue.length > 1)
-    //     queueActions.push([{ text: "Switch", callback_data: "switchPosition" }]);
+    if (queueUtils.queue.length > 1)
+        queueActions.push([{ text: "Switch", callback_data: "switchPosition" }]);
 
     let resp = `Hello ${msg.from.username},\nI'm ShowerBot,\nHow can i help?`;
 
@@ -87,10 +87,10 @@ bot.on('callback_query', (msg) => {
 });
 
 bot.onText(/^[^\/].*/, (msg) => {
-    if (msg.chat.id === consts.adminGroupChatId) {
+    if (msg.chat.id === consts.adminGroupChatId)
         adminsHandlers.adminsHandlersMap["message"](bot, msg);
-        return;
-    }
+    else
+        callbackHandlers.callbackHandlersMap["message"](bot, msg);
 });
 
 // logger
