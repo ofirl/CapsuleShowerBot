@@ -308,7 +308,7 @@ function acceptSwitch(bot, msg) {
         stateUtils.confirmSwitch(bot, msg, userSwitch.from);
     }
     else {
-        bot.sendMessage(msg.chat.id, `Switch request is no longer valid...`);
+        bot.sendMessage(msg.message.chat.id, `Switch request is no longer valid...`);
     }
 }
 

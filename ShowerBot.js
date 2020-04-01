@@ -99,7 +99,8 @@ bot.on('message', (msg) => {
 });
 
 bot.on('sticker', (msg) => {
-    bot.sendSticker(msg.chat.id, consts.showerDoneStickers[mathUtils.getRandomNumber(0, consts.showerDoneStickers.length - 1)]);
+    if (msg.chat.type !== "group")
+        bot.sendSticker(msg.chat.id, consts.showerDoneStickers[mathUtils.getRandomNumber(0, consts.showerDoneStickers.length - 1)]);
 });
 
 module.exports = bot;
