@@ -3,10 +3,14 @@ let globals = require('../globals');
 let queueUtils = require('./QueueUtils');
 let userUtils = require('./userUtils');
 
+console.log(queueUtils);
+
 function startBreak(bot, msg) {
     globals.state.break = true;
 
     queueUtils.sendToAllQueue(bot, msg, "Break started");
+
+    bot.sendMessage(consts.adminGroupChatId, "Break started");
 }
 
 function endBreak(bot, msg) {
@@ -62,16 +66,14 @@ function confirmSwitch(bot, msg, id) {
     let fromIndex = queueUtils.getQueueIndex(userSwitch.from);
     let toIndex = queueUtils.getQueueIndex(userSwitch.to);
 
-    if (fromIndex === 0 || toIndex === 0)
-        bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
-            reply_markup: {
-                inline_keyboard: [
-                    [{ text: "End shower", callback_data: "endCurrentShower" }],
-                ]
-            }
-        });
+    if (fromIndex === 0 || toIndex === 0 && (!globals.state.break))
+        queueUtils.sendEndShowerNotice(bot);
 
     return cancelSwitch(id);
+}
+
+function getBreakStatus() {
+    return globals.state.break;
 }
 
 module.exports = {
@@ -82,4 +84,5 @@ module.exports = {
     findUserSwitchByFrom,
     findUserSwitchByTo,
     confirmSwitch,
+    getBreakStatus,
 };

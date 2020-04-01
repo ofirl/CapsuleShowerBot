@@ -21,10 +21,10 @@ function addToQueue(queueObj) {
     return queue.length;
 }
 
-function removeFromQueue(id) {
+function removeFromQueue(bot ,msg, id) {
     let index = queue.findIndex((q) => q.id === id);
     if (index === -1)
-        return;
+        return null;
 
     return queue.splice(index, 1)[0];
 }
@@ -77,6 +77,18 @@ function addToQueueByIndex(queueObj, index) {
     return true;
 }
 
+function sendEndShowerNotice(bot) {
+    bot.sendMessage(queue[0].id, `The shower is now yours`, {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: "End shower", callback_data: "endCurrentShower" }],
+            ]
+        }
+    });
+
+    return true;
+}
+
 module.exports = {
     queue: queue,
     doneQueue: doneQueue,
@@ -91,4 +103,5 @@ module.exports = {
     sendToAllQueue,
     resetQueues,
     addToQueueByIndex,
+    sendEndShowerNotice,
 };

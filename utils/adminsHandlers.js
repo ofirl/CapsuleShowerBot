@@ -59,17 +59,12 @@ function endBreak(bot, msg) {
 
 function startBreak(bot, msg) {
     stateManager.startBreak(bot, msg);
-
-    bot.editMessageText(`Break started`,
-        {
-            chat_id: msg.message.chat.id,
-            message_id: msg.message.message_id
-        }
-    );
 }
 
 function resetQueues(bot, msg) {
     queueUtils.resetQueues(bot, msg);
+    startBreak(bot, msg);
+    
     bot.editMessageText(`Queues cleared`,
         {
             chat_id: msg.message.chat.id,
@@ -165,7 +160,7 @@ function messageHandler(bot, msg) {
                 return;
             }
 
-            queueUtils.addToQueueByIndex(queueUtils.removeFromQueue(queueUtils.queue[src - 1].id), dst - 1);
+            queueUtils.addToQueueByIndex(queueUtils.removeFromQueue(bot, msg, queueUtils.queue[src - 1].id), dst - 1);
 
             let movedObj = queueUtils.queue[dst - 1];
             bot.sendMessage(msg.chat.id, `${movedObj.first_name || ""} ${movedObj.last_name || ""}${movedObj.username ? ` - @${movedObj.username}` : ""} was moved`);
@@ -176,7 +171,7 @@ function messageHandler(bot, msg) {
 
             queueUtils.sendToAllQueue(bot, msg, 'The queue have changed,\n' + queueUtils.parseQueue(), queueStartNotification, queueEndNotification);
 
-            if (dst === 1 || src === 1)
+            if (dst === 0 || src === 0 && (!globals.state.break))
                 bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
                     reply_markup: {
                         inline_keyboard: [

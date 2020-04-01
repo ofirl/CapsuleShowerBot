@@ -4,6 +4,7 @@ let stateUtils = require('./stateManager');
 let userUtils = require('./userUtils');
 let consts = require('../consts');
 let mathUtils = require('./mathUtils');
+
 let { answerCallbackQueryMiddleware } = require('./middlewares');
 
 function showQueue(bot, msg) {
@@ -41,15 +42,33 @@ function addToQueue(bot, msg) {
 }
 
 function removeFromQueue(bot, msg) {
-    queueUtils.removeFromQueue(msg.from.id);
-    bot.editMessageText("You have been removed from the queue",
-        {
-            chat_id: msg.message.chat.id,
-            message_id: msg.message.message_id
-        }
-    );
+    let prevQueueIndex = queueUtils.getQueueIndex(msg.from.id);
+    if (queueUtils.removeFromQueue(bot, msg, msg.from.id)) {
+        bot.editMessageText("You have been removed from the queue",
+            {
+                chat_id: msg.message.chat.id,
+                message_id: msg.message.message_id
+            }
+        );
 
-    bot.sendMessage(consts.adminGroupChatId, `${userUtils.formatName(msg.from)} has left the queue`);
+        bot.sendMessage(consts.adminGroupChatId, `${userUtils.formatName(msg.from)} has left the queue`);
+
+        if (prevQueueIndex === 0 && !stateUtils.getBreakStatus())
+            queueUtils.sendEndShowerNotice(bot);
+
+        if (queueUtils.queue.length === 0) {
+            stateUtils.startBreak(bot, msg);
+            bot.sendMessage(consts.adminGroupChatId, "The queue is now empty,\nTaking a break");
+        }
+    }
+    else {
+        bot.editMessageText("You are not in the queue dummy...",
+            {
+                chat_id: msg.message.chat.id,
+                message_id: msg.message.message_id
+            }
+        );
+    }
 }
 
 function endCurrentShower(bot, msg) {
@@ -96,13 +115,7 @@ function callNextInLine(bot, msg) {
     if (queueUtils.queue.length < 1 || globals.state.break)
         return;
 
-    bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
-        reply_markup: {
-            inline_keyboard: [
-                [{ text: "End shower", callback_data: "endCurrentShower" }],
-            ]
-        }
-    });
+    queueUtils.sendEndShowerNotice(bot);
 
     if (queueUtils.queue.length < 2)
         return;
@@ -176,9 +189,22 @@ function messageHandler(bot, msg) {
     if (userSwitch) {
         let dst;
         try {
+            if (msg.text.match(/\D/) != null)
+                throw "Nan";
+
             dst = parseInt(msg.text);
         }
         catch (e) {
+            bot.sendMessage(msg.from.id, `Oops...\nIt appears there was an error parsing your number, please try again`, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: "Cancel", callback_data: "cancelSwitch" }],
+                    ]
+                }
+            });
+            return;
+        }
+        if (isNaN(dst)) {
             bot.sendMessage(msg.from.id, `Oops...\nIt appears there was an error parsing your number, please try again`, {
                 reply_markup: {
                     inline_keyboard: [
