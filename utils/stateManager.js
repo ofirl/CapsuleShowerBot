@@ -76,6 +76,24 @@ function getBreakStatus() {
     return globals.state.break;
 }
 
+function getGlobalMessageStatus() {
+    return globals.state.adminGlobalMessage;
+}
+
+function startAdminGlobalMessage() {
+    globals.state.adminGlobalMessage = true;
+}
+
+function cancelAdminGlobalMessage() {
+    globals.state.adminGlobalMessage = false;
+}
+
+function confirmAdminGlobalMessage(bot, msg, announcement) {
+    globals.state.adminGlobalMessage = false;
+
+    queueUtils.sendToAllQueue(bot, msg, announcement);
+}
+
 module.exports = {
     startBreak,
     endBreak,
@@ -85,4 +103,8 @@ module.exports = {
     findUserSwitchByTo,
     confirmSwitch,
     getBreakStatus,
+    getGlobalMessageStatus,
+    startAdminGlobalMessage,
+    cancelAdminGlobalMessage,
+    confirmAdminGlobalMessage,
 };

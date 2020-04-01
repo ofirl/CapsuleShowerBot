@@ -16,6 +16,9 @@ function adminStart(bot, msg) {
     if (queueUtils.queue.length >= 2)
         breakActions.push([{ text: "Move Someone to number", callback_data: "moveSomeoneToNumber" }]);
 
+    if (queueUtils.queue.length > 0)
+        breakActions.push([{ text: "Send announcment to queue", callback_data: "sendToQueue" }]);
+
     bot.sendMessage(msg.chat.id, "Hi :)", {
         reply_markup: {
             inline_keyboard: [
@@ -64,7 +67,7 @@ function startBreak(bot, msg) {
 function resetQueues(bot, msg) {
     queueUtils.resetQueues(bot, msg);
     startBreak(bot, msg);
-    
+
     bot.editMessageText(`Queues cleared`,
         {
             chat_id: msg.message.chat.id,
@@ -171,7 +174,7 @@ function messageHandler(bot, msg) {
 
             queueUtils.sendToAllQueue(bot, msg, 'The queue have changed,\n' + queueUtils.parseQueue(), queueStartNotification, queueEndNotification);
 
-            if (dst === 0 || src === 0 && (!globals.state.break))
+            if (dst === 1 || src === 1 && (!stateManager.getBreakStatus()))
                 bot.sendMessage(queueUtils.queue[0].id, `The shower is now yours`, {
                     reply_markup: {
                         inline_keyboard: [
@@ -182,6 +185,9 @@ function messageHandler(bot, msg) {
 
             globals.state.adminMove = null;
         }
+    }
+    else if (stateManager.getGlobalMessageStatus()) {
+        stateManager.confirmAdminGlobalMessage(bot, msg, msg.text);
     }
 }
 
@@ -199,6 +205,26 @@ function adminCancelMove(bot, msg) {
     bot.sendMessage(msg.chat.id, `Move canceled`);
 }
 
+function sendToQueue(bot, msg) {
+    stateManager.startAdminGlobalMessage();
+
+    bot.editMessageText("Please enter your announcment",
+        {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Cancel", callback_data: "cancelGlobalMessage" }],
+                ]
+            },
+            chat_id: msg.message.chat.id,
+            message_id: msg.message.message_id
+        }
+    );
+}
+
+function cancelGlobalMessage(bot, msg) {
+    stateManager.cancelAdminGlobalMessage();
+}
+
 const adminsHandlersMap = {
     start: adminStart,
     message: messageHandler,
@@ -210,6 +236,8 @@ const adminsHandlersMap = {
         resetQueues,
         moveSomeoneToNumber,
         adminCancelMove,
+        sendToQueue,
+        cancelGlobalMessage,
     ].reduce((acc, f) => {
         acc[f.name] = answerCallbackQueryMiddleware(f);
         return acc;

@@ -22,6 +22,7 @@ const state = {
     break: true,
     adminMove: null,
     activeUserSwitches: [],
+    adminGlobalMessage: false,
 };
 
 module.exports = {
