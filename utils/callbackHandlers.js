@@ -28,6 +28,7 @@ function addToQueue(bot, msg) {
         {
             inline_keyboard: [
                 [{ text: "Remove from queue", callback_data: "removeFromQueue" }],
+                [{ text: "Switch", callback_data: "switchPosition" }],
                 [{ text: "Show queue", callback_data: "showQueue" }],
             ],
         },
